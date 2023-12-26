@@ -7,6 +7,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 const authRoutes = require("./routes/authRoutes");
+const contactRoutes = require("./routes/contactRoutes");
+
 const { errorMiddleware } = require("./middleware/errorHandler");
 
 app.use(express.json());
@@ -23,3 +25,4 @@ connectDB();
 
 // routes
 app.use("/auth", errorMiddleware, authRoutes);
+app.use("/contact", errorMiddleware, contactRoutes);
