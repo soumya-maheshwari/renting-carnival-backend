@@ -7,6 +7,7 @@ const { validatepassword, validatEmail } = require("../utils/validations");
 const otpGenerator = require("otp-generator");
 const mailer = require("../utils/mailer");
 const Otp = require("../models/otpModel");
+const randomstring = require("randomstring");
 
 const createAccessToken = (user) => {
   return jwt.sign(user, process.env.JWT_ACCESS_KEY, { expiresIn: "30d" });

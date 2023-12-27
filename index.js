@@ -20,6 +20,8 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
+app.use(errorMiddleware);
+
 // Connection to DataBase
 connectDB();
 
