@@ -4,9 +4,7 @@ const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 
 const createProduct = async (req, res, next) => {
   try {
-    console.log("request  ", req);
     const { name, description, price, stock, category } = req.body;
-    console.log("request body ", req.body);
     owner = req.user._id;
 
     // Validation - ensure required fields are present
