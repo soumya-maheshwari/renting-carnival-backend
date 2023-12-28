@@ -24,7 +24,7 @@ const createProduct = async (req, res, next) => {
 
     // Check for product images uploaded via multer
     const productImages = req.files;
-    // console.log(productImages);
+    console.log(productImages);
     if (!productImages || productImages.length === 0) {
       next(new ErrorHandler(400, "Product images are required"));
     }
@@ -51,9 +51,7 @@ const createProduct = async (req, res, next) => {
 
     // console.log("product ", product);
 
-    if (!product) {
-      throw new ErrorHandler(500, "Error while creating the product");
-    }
+    console.log(product);
 
     return res.status(201).json({
       success: true,
