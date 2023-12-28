@@ -193,9 +193,19 @@ const signUpTwo = async (req, res, next) => {
   }
 };
 
+const getProfile = async (req, res, next) => {
+  const profile = req.user;
+  console.log(profile);
+  return res.status(200).json({
+    success: true,
+    profile,
+  });
+};
+
 module.exports = {
   login,
   signUpWithEmail,
   emailVerify,
   signUpTwo,
+  getProfile,
 };
