@@ -8,6 +8,9 @@ const otpGenerator = require("otp-generator");
 const mailer = require("../utils/mailer");
 const Otp = require("../models/otpModel");
 const randomstring = require("randomstring");
+const nodemailer = require("nodemailer");
+const emailUser = "vivek.thakur.ug20@nsut.ac.in";
+const emailPassword = "Vivekthakur!@#123";
 
 const createAccessToken = (user) => {
   return jwt.sign(user, process.env.JWT_ACCESS_KEY, { expiresIn: "30d" });
@@ -193,13 +196,121 @@ const signUpTwo = async (req, res, next) => {
   }
 };
 
+const sendResetPassword = async (name, email, token) => {
+  try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      requireTLS: true,
+      auth: {
+        user: emailUser,
+        pass: emailPassword,
+      },
+    });
+    console.log("transported created", transporter);
+
+    const mailoptions = {
+      from: emailUser,
+      to: email,
+      subject: "For reset password",
+      html:
+        "<p> hi " +
+        name +
+        ', pls copy the link and <a href="http://localhost:5173/reset?token=' +
+        token +
+        '">  reset you password </a>',
+    };
+    console.log("mail options are  ", mailoptions);
+
+    transporter.sendMail(mailoptions, function (error, info) {
+      if (error) {
+        console.log("error occured mail not sent!");
+        console.log(error);
+      } else {
+        console.log("mail has been sent  ", info.response);
+      }
+    });
+  } catch (error) {
+    res.send(400).send({ message: "error occured" });
+  }
+};
+
+const forgetPassword = async (req, res) => {
+  try {
+    // console.log(req.body);
+    const email = req.body.email;
+    // console.log("user email sent  ", email);
+    const userData = await User.findOne({ email: email });
+    // console.log("user data from email  ", userData);
+    if (userData) {
+      const randomString = randomstring.generate();
+      // console.log("random string ", randomString);
+      const data = await User.updateOne(
+        { email: email },
+        { $set: { token: randomString } }
+      );
+      // console.log("data sent  ", data);
+      sendResetPassword(userData.name, userData.email, randomString);
+      // console.log("request sent");
+      res.status(200).send({ message: "pls check your inbox" });
+    } else {
+      console.log("successful");
+      res.send(200);
+    }
+  } catch (error) {
+    res.status(400).send({ message: "error occurred" });
+  }
+};
+const securePassword = async (password) => {
+  try {
+    const passwordHash = await bcrypt.hash(password, 12);
+    return passwordHash;
+  } catch (error) {
+    res.status(400).send(error);
+  }
+};
+const resetPassword = async (req, res) => {
+  try {
+    const token = req.query.token;
+    // console.log("token from the url  ", token);
+    const tokenData = await User.findOne({ token: token });
+    // console.log("token Data  ", tokenData);
+
+    if (tokenData) {
+      const password = req.body.password;
+      // console.log("password ", password);
+      const newPassword = await securePassword(password);
+      const userData = await User.findByIdAndUpdate(
+        { _id: tokenData._id },
+        { $set: { password: newPassword, token: "" } },
+        { new: true }
+      );
+
+      res
+        .status(200)
+        .send({ message: "user password has been reset", data: userData });
+    } else {
+      throw new ErrorHandler(200, "this link has expired");
+    }
+  } catch (error) {
+    console.log(error);
+    throw new ErrorHandler(200, "error occured while reseting password");
+  }
+};
+
 const getProfile = async (req, res, next) => {
-  const profile = req.user;
-  console.log(profile);
-  return res.status(200).json({
-    success: true,
-    profile,
-  });
+  try {
+    const profile = req.user;
+    console.log(profile);
+    return res.status(200).json({
+      success: true,
+      profile,
+    });
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
 };
 
 module.exports = {
@@ -207,5 +318,7 @@ module.exports = {
   signUpWithEmail,
   emailVerify,
   signUpTwo,
+  forgetPassword,
+  resetPassword,
   getProfile,
 };
