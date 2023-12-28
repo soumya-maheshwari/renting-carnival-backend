@@ -159,8 +159,12 @@ const emailVerify = async (req, res, next) => {
 
 const signUpTwo = async (req, res, next) => {
   try {
-    const { phone, name, password } = req.body;
+    const { phone, name, password, role } = req.body;
     const user = req.user;
+
+    if (!(name && phone && role && password)) {
+      return next(new ErrorHandler(400, "all fields are required "));
+    }
 
     const find_user = await User.findOne({ email: user.email.toLowerCase() });
 
@@ -176,8 +180,10 @@ const signUpTwo = async (req, res, next) => {
           name: name,
           password: pass,
           isSignedUp: true,
+          role: role,
         },
-      }
+      },
+      { new: true }
     );
 
     console.log(userr);
@@ -286,7 +292,7 @@ const resetPassword = async (req, res) => {
         { $set: { password: newPassword, token: "" } },
         { new: true }
       );
-      
+
       res
         .status(200)
         .send({ message: "user password has been reset", data: userData });
@@ -299,11 +305,26 @@ const resetPassword = async (req, res) => {
   }
 };
 
+const getProfile = async (req, res, next) => {
+  try {
+    const profile = req.user;
+    console.log(profile);
+    return res.status(200).json({
+      success: true,
+      profile,
+    });
+  } catch (error) {
+    console.log(error);
+    return error.response;
+  }
+};
+
 module.exports = {
   login,
   signUpWithEmail,
   emailVerify,
   signUpTwo,
   forgetPassword,
-  resetPassword
+  resetPassword,
+  getProfile,
 };

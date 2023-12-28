@@ -25,10 +25,16 @@ const userSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  token:{
-      type:String,
-      default:""
-  }
+  token: {
+    type: String,
+    default: "",
+  },
+
+  role: {
+    type: String,
+    enum: ["buyer", "seller"],
+    default: "buyer",
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
