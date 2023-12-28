@@ -159,8 +159,12 @@ const emailVerify = async (req, res, next) => {
 
 const signUpTwo = async (req, res, next) => {
   try {
-    const { phone, name, password } = req.body;
+    const { phone, name, password, role } = req.body;
     const user = req.user;
+
+    if (!(name && phone && role && password)) {
+      return next(new ErrorHandler(400, "all fields are required "));
+    }
 
     const find_user = await User.findOne({ email: user.email.toLowerCase() });
 
@@ -176,8 +180,10 @@ const signUpTwo = async (req, res, next) => {
           name: name,
           password: pass,
           isSignedUp: true,
+          role: role,
         },
-      }
+      },
+      { new: true }
     );
 
     console.log(userr);
