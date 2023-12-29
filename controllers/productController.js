@@ -1,44 +1,49 @@
 const { ErrorHandler } = require("../middleware/errorHandler");
 const Product = require("../models/productModel.js");
-const { uploadOnCloudinary } = require("../utils/cloudinary.js");
+// const { uploadOnCloudinary } = require("../utils/cloudinary.js");
+const cloudinary = require("cloudinary").v2;
 
 const createProduct = async (req, res, next) => {
   try {
-    // console.log("request  ", req);
     const { name, description, price, stock, category } = req.body;
-    // console.log("request body ", req.body);
+    console.log("Request Body:", req.body);
 
-    console.log(req.user);
+    console.log("Entire Request Object:", req);
+    console.log("Request file:", req.file);
+
     owner = req.user._id;
 
     if (req.user.role !== "Seller") {
       next(new ErrorHandler(400, "Buyer cannot create a product"));
     }
 
-    // Validation - ensure required fields are present
-    if (!name || !description || !price || !stock || !category || !owner) {
-      next(new ErrorHandler(400, "All required fields must be provided"));
+    if (!name) {
+      next(new ErrorHandler(400, "Name is required"));
+    } else if (!description) {
+      next(new ErrorHandler(400, "Description is required"));
+    } else if (!price) {
+      next(new ErrorHandler(400, "Price is required"));
+    } else if (!stock) {
+      next(new ErrorHandler(400, "Stock is required"));
+    } else if (!category) {
+      next(new ErrorHandler(400, "Category is required"));
     }
 
-    // console.log("request  ", req);
+    let file = req.files ? req.files.file : null;
+    let productImage = null;
 
-    // Check for product images uploaded via multer
-    const productImages = req.files;
-    console.log(productImages);
-    if (!productImages || productImages.length === 0) {
-      next(new ErrorHandler(400, "Product images are required"));
+    if (file) {
+      const result = await cloudinary.uploader.upload(file.tempFilePath, {
+        public_id: `${Date.now()}`,
+        resource_type: "auto",
+        folder: "images",
+      });
+
+      if (result.resource_type == "image") {
+        productImage = result.secure_url;
+      }
     }
 
-    // Perform the upload to Cloudinary for each product image
-    const uploadedImages = await Promise.all(
-      productImages.map(async (image) => {
-        const imageUrl = await uploadOnCloudinary(image.path);
-        return imageUrl?.url || null;
-      })
-    );
-
-    // console.log("uploaded images ", uploadedImages);
-    // Create the product in the database with the uploaded image URLs
     const product = await Product.create({
       name,
       description,
@@ -46,7 +51,7 @@ const createProduct = async (req, res, next) => {
       stock,
       category,
       owner,
-      productImage: uploadedImages,
+      productImage,
     });
 
     // console.log("product ", product);
