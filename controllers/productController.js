@@ -4,21 +4,29 @@ const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 
 const createProduct = async (req, res, next) => {
   try {
+    // console.log("request  ", req);
     const { name, description, price, stock, category } = req.body;
+    // console.log("request body ", req.body);
+
+//     console.log(req.user);
     owner = req.user._id;
+
+    if (req.user.role !== "Seller") {
+      next(new ErrorHandler(400, "Buyer cannot create a product"));
+    }
 
     // Validation - ensure required fields are present
     if (!name || !description || !price || !stock || !category || !owner) {
-      throw new ErrorHandler(400, "All required fields must be provided");
+      next(new ErrorHandler(400, "All required fields must be provided"));
     }
 
     // console.log("request  ", req);
 
     // Check for product images uploaded via multer
     const productImages = req.files;
-    // console.log(productImages);
+    console.log(productImages);
     if (!productImages || productImages.length === 0) {
-      throw new ErrorHandler(400, "Product images are required");
+      next(new ErrorHandler(400, "Product images are required"));
     }
 
     // Perform the upload to Cloudinary for each product image
@@ -43,9 +51,7 @@ const createProduct = async (req, res, next) => {
 
     // console.log("product ", product);
 
-    if (!product) {
-      throw new ErrorHandler(500, "Error while creating the product");
-    }
+    console.log(product);
 
     return res.status(201).json({
       success: true,
@@ -54,11 +60,7 @@ const createProduct = async (req, res, next) => {
     });
   } catch (error) {
     console.log(error);
-    res
-      .status(400)
-      .json(
-        new ErrorHandler(400, error.message || "Error while creating product")
-      );
+    next(error);
   }
 };
 
@@ -111,9 +113,9 @@ const deleteProduct = async (req, res, next) => {
     await Product.findByIdAndDelete(productId);
 
     res.status(200).json({
-        success: true,
-        msg: "Product deleted successfully",
-      });
+      success: true,
+      msg: "Product deleted successfully",
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json(new ErrorHandler(500, "Error while deleting product"));
