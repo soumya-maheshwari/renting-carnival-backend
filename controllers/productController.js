@@ -11,6 +11,7 @@ const createProduct = async (req, res, next) => {
     console.log("Entire Request Object:", req);
     console.log("Request file:", req.file);
 
+    //     console.log(req.user);
     owner = req.user._id;
 
     if (req.user.role !== "Seller") {
