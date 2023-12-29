@@ -72,16 +72,15 @@ const createProduct = async (req, res, next) => {
 
 const getAllProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({});
+    const products = await Product.find({}).populate("owner", "name");
     res.status(200).json({
       success: true,
       msg: "All products retrieved successfully",
       products,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json(new ErrorHandler(500, "Error while fetching products"));
+    console.log(error);
+    next(error);
   }
 };
 
@@ -92,15 +91,14 @@ const getUserProducts = async (req, res, next) => {
     // Fetch products belonging to the specified user
     const userProducts = await Product.find({ owner: userId });
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       msg: "User's products retrieved successfully",
       userProducts,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json(new ErrorHandler(500, "Error while fetching user's products"));
+    console.log(error);
+    next(error);
   }
 };
 
