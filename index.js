@@ -11,9 +11,10 @@ const PORT = process.env.PORT || 5000;
 
 const authRoutes = require("./routes/authRoutes");
 const contactRoutes = require("./routes/contactRoutes");
-const productRoutes = require("./routes/productRoutes")
+const productRoutes = require("./routes/productRoutes");
 const commentRoutes = require("./routes/commentRoute");
 const reviewRoutes = require("./routes/reviewRoute");
+const cartRoutes = require("./routes/cartRoutes");
 
 const { errorMiddleware } = require("./middleware/errorHandler");
 
@@ -53,3 +54,4 @@ app.use("/contact", errorMiddleware, contactRoutes);
 app.use("/product", errorMiddleware, productRoutes);
 app.use("/comment", errorMiddleware, commentRoutes);
 app.use("/review", errorMiddleware, reviewRoutes);
+app.use("/cart", errorMiddleware, cartRoutes);
