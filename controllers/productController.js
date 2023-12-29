@@ -8,7 +8,7 @@ const createProduct = async (req, res, next) => {
     const { name, description, price, stock, category } = req.body;
     // console.log("request body ", req.body);
 
-    console.log(req.user);
+//     console.log(req.user);
     owner = req.user._id;
 
     if (req.user.role !== "Seller") {
