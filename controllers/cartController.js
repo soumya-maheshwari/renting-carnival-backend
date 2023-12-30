@@ -135,8 +135,13 @@ const getAllProducts = async (req, res, next) => {
 
     const cart = await Cart.findOne({
       user: userId,
-    }).populate("items.product", "items.product.owner.name");
-
+    }).populate({
+      path: "items.product",
+      populate: {
+        path: "owner",
+        select: "name",
+      },
+    });
     if (!cart) {
       return res.status(200).json({
         success: true,
