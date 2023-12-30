@@ -49,9 +49,9 @@ app.use(errorMiddleware);
 connectDB();
 
 // routes
-app.use("/auth", errorMiddleware, authRoutes);
-app.use("/contact", errorMiddleware, contactRoutes);
-app.use("/product", errorMiddleware, productRoutes);
-app.use("/comment", errorMiddleware, commentRoutes);
-app.use("/review", errorMiddleware, reviewRoutes);
-app.use("/cart", errorMiddleware, cartRoutes);
+app.use("/auth", authRoutes, errorMiddleware);
+app.use("/contact", contactRoutes, errorMiddleware);
+app.use("/product", productRoutes, errorMiddleware);
+app.use("/comment", commentRoutes, errorMiddleware);
+app.use("/review", reviewRoutes, errorMiddleware);
+app.use("/cart", cartRoutes, errorMiddleware);
