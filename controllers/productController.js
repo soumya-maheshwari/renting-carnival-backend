@@ -126,9 +126,29 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+const getSingleProduct = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      next(new ErrorHandler(400, "Product not found"));
+    }
+
+    return res.status(200).json({
+      success: true,
+      product,
+    });
+  } catch (error) {
+    console.log(error);
+    return err.response;
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProducts,
   getUserProducts,
   deleteProduct,
+  getSingleProduct,
 };

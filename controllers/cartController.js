@@ -81,7 +81,7 @@ const removeFromCart = async (req, res, next) => {
     const { productId } = req.body;
 
     if (!productId) {
-      return next(new ErrorHandler(400, "select any product to continue"));
+      return next(new ErrorHandler(400, "Select any product to continue"));
     }
 
     const product = await Product.findOne({
@@ -98,25 +98,29 @@ const removeFromCart = async (req, res, next) => {
       return next(new ErrorHandler(400, "Cart not found"));
     }
 
-    // console.log(cart.items);
-    // const cartItem = cart.items.find((item) => item.product === product._id);
-    const cartItem = cart.items.find((item) =>
+    // Find the index of the item in the cart
+    const cartItemIndex = cart.items.findIndex((item) =>
       item.product.equals(product._id)
     );
 
-    console.log(cartItem);
-    if (cartItem.quantity >= 1) {
-      cartItem.quantity--;
+    if (cartItemIndex !== -1) {
+      const cartItem = cart.items[cartItemIndex];
 
-      if (cartItem.quantity == 0) {
-        cart.items = cart.items.filter((item) => item.product !== productId);
+      if (cartItem.quantity > 1) {
+        // Decrease the quantity if greater than 1
+        cartItem.quantity--;
+      } else {
+        // Remove the item from the cart if quantity is 1 or 0
+        cart.items.splice(cartItemIndex, 1);
       }
+
+      await cart.save();
     }
-    await cart.save();
+
     return res.status(200).json({
       success: true,
       cart,
-      msg: "Product removed from  cart",
+      msg: "Product removed from cart",
     });
   } catch (error) {
     console.error(error);
@@ -186,8 +190,49 @@ const getAllProducts = async (req, res, next) => {
   }
 };
 
+const deleteProduct = async (req, res, next) => {
+  try {
+    const user = req.user;
+    const userId = user._id;
+
+    if (!user) {
+      return next(new ErrorHandler(400, "Login or signup to continue"));
+    }
+    const cart = await Cart.findOne({
+      user: userId,
+    });
+
+    if (!cart) {
+      next(new ErrorHandler(400, "Cart not found"));
+    }
+    const { productId } = req.body;
+    const itemIndex = cart.items.findIndex(
+      (item) => item.product.toString() === productId
+    );
+
+    if (itemIndex === -1) {
+      return res.status(404).json({ error: "Product not found in the cart" });
+    }
+
+    // Remove the item from the items array
+    cart.items.splice(itemIndex, 1);
+
+    // Save the updated cart
+    await cart.save();
+
+    return res.status(200).json({
+      success: true,
+      msg: "Product removed",
+      cart,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
 module.exports = {
   addToCart,
   removeFromCart,
   getAllProducts,
+  deleteProduct,
 };
