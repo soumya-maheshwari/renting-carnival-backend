@@ -16,6 +16,7 @@ const commentRoutes = require("./routes/commentRoute");
 const reviewRoutes = require("./routes/reviewRoute");
 const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 
 const { errorMiddleware } = require("./middleware/errorHandler");
 
@@ -57,3 +58,4 @@ app.use("/comment", commentRoutes, errorMiddleware);
 app.use("/review", reviewRoutes, errorMiddleware);
 app.use("/cart", cartRoutes, errorMiddleware);
 app.use("/wishlist", wishlistRoutes, errorMiddleware);
+app.use("/profile", profileRoutes, errorMiddleware);

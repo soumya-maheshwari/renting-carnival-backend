@@ -35,6 +35,10 @@ const userSchema = mongoose.Schema({
     enum: ["buyer", "seller"],
     default: "buyer",
   },
+  photo: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("User", userSchema);
