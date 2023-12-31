@@ -100,7 +100,6 @@ const removeFromWishlist = async (req, res, next) => {
     }
 
     let wishlist = await Wishlist.findOne({ user: userId });
-
     if (!wishlist) {
       wishlist = await Wishlist.create({ user: userId, products: [] });
     }
@@ -115,7 +114,13 @@ const removeFromWishlist = async (req, res, next) => {
 
     await wishlist.save();
 
-    res.json(wishlist);
+    await wishlist.populate("products");
+
+    return res.json({
+      success: true,
+      msg: "Product removed from wishlist",
+      wishlist,
+    });
   } catch (error) {
     console.log(error);
     next(error);

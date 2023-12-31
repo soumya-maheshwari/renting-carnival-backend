@@ -223,7 +223,7 @@ const sendResetPassword = async (name, email, token) => {
       html:
         "<p> hi " +
         name +
-        ', pls copy the link and <a href="http://localhost:5173/reset?token=' +
+        ', pls copy the link and <a href="https://renting-carnival.netlify.app/reset?token=' +
         token +
         '">  reset you password </a>',
     };
