@@ -30,7 +30,13 @@ const addToCart = async (req, res, next) => {
     console.log(product);
     console.log(product._id);
 
-    let cart = await Cart.findOne({ user: userId });
+    let cart = await Cart.findOne({ user: userId }).populate({
+      path: "items.product",
+      populate: {
+        path: "owner",
+        select: "name",
+      },
+    });
 
     if (!cart) {
       cart = await Cart.create({ user: userId, items: [] });
@@ -92,7 +98,13 @@ const removeFromCart = async (req, res, next) => {
       return next(new ErrorHandler(400, "Product not found"));
     }
 
-    let cart = await Cart.findOne({ user: userId });
+    let cart = await Cart.findOne({ user: userId }).populate({
+      path: "items.product",
+      populate: {
+        path: "owner",
+        select: "name",
+      },
+    });
 
     if (!cart) {
       return next(new ErrorHandler(400, "Cart not found"));
@@ -219,6 +231,13 @@ const deleteProduct = async (req, res, next) => {
 
     // Save the updated cart
     await cart.save();
+    await cart.populate({
+      path: "items.product",
+      populate: {
+        path: "owner",
+        select: "name",
+      },
+    });
 
     return res.status(200).json({
       success: true,
@@ -230,6 +249,7 @@ const deleteProduct = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
   addToCart,
   removeFromCart,
