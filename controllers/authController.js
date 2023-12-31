@@ -160,6 +160,9 @@ const emailVerify = async (req, res, next) => {
 const signUpTwo = async (req, res, next) => {
   try {
     const { phone, name, password, role } = req.body;
+
+    const pass2 = await bcrypt.hash(password, 12);
+    console.log(pass2);
     const user = req.user;
 
     if (!(name && phone && role && password)) {
