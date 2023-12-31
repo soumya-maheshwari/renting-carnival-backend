@@ -115,7 +115,13 @@ const removeFromWishlist = async (req, res, next) => {
 
     await wishlist.save();
 
-    res.json(wishlist);
+    // res.json(wishlist);
+
+       return res.json({
+      success: true,
+      msg: "Product removed from wishlist",
+      wishlist,
+    });
   } catch (error) {
     console.log(error);
     next(error);
