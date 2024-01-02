@@ -17,6 +17,7 @@ const reviewRoutes = require("./routes/reviewRoute");
 const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const profileRoutes = require("./routes/profileRoutes");
+const packageRoutes = require("./routes/packageRoutes");
 
 const { errorMiddleware } = require("./middleware/errorHandler");
 
@@ -59,3 +60,32 @@ app.use("/review", reviewRoutes, errorMiddleware);
 app.use("/cart", cartRoutes, errorMiddleware);
 app.use("/wishlist", wishlistRoutes, errorMiddleware);
 app.use("/profile", profileRoutes, errorMiddleware);
+app.use("/package", packageRoutes, errorMiddleware);
+
+// const Package = require("./models/packageModel");
+// const mongoose = require("mongoose");
+// // Create and insert five packages using async/await
+// async function insertPackages() {
+//   try {
+//     const docs = await Package.insertMany([
+//       {
+//         name: "Package 1",
+//         numberOfProducts: 3,
+//         durations: [
+//           { durationType: "annual", price: 2700 },
+//           { durationType: "halfYearly", price: 3200 },
+//         ],
+//       },
+
+//     ]);
+//     console.log("Packages inserted successfully:", docs);
+//   } catch (err) {
+//     console.error(err);
+//   } finally {
+//     // Close the MongoDB connection after inserting packages
+//     await mongoose.connection.close();
+//   }
+// }
+
+// // Call the function to insert packages
+// insertPackages();
