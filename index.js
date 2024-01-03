@@ -3,6 +3,7 @@ require("dotenv").config();
 const cors = require("cors");
 const connectDB = require("./connectDB");
 const app = express();
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const cloudinary = require("cloudinary").v2;
 const fileUpload = require("express-fileupload");
@@ -19,6 +20,7 @@ const wishlistRoutes = require("./routes/wishlistRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const packageRoutes = require("./routes/packageRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 const { errorMiddleware } = require("./middleware/errorHandler");
 
@@ -63,6 +65,7 @@ app.use("/wishlist", wishlistRoutes, errorMiddleware);
 app.use("/profile", profileRoutes, errorMiddleware);
 app.use("/package", packageRoutes, errorMiddleware);
 app.use("/admin", adminRoutes, errorMiddleware);
+app.use("/payment", paymentRoutes, errorMiddleware);
 
 // const Package = require("./models/packageModel");
 // const mongoose = require("mongoose");
