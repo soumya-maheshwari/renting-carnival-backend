@@ -7,3 +7,4 @@ module.exports.cartController = require("./cartController");
 module.exports.wishlistController = require("./wishlistController");
 module.exports.profileController = require("./profileController");
 module.exports.packageController = require("./packageController");
+module.exports.adminController = require("./adminController");

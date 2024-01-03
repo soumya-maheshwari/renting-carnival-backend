@@ -18,6 +18,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const profileRoutes = require("./routes/profileRoutes");
 const packageRoutes = require("./routes/packageRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 
 const { errorMiddleware } = require("./middleware/errorHandler");
 
@@ -61,6 +62,7 @@ app.use("/cart", cartRoutes, errorMiddleware);
 app.use("/wishlist", wishlistRoutes, errorMiddleware);
 app.use("/profile", profileRoutes, errorMiddleware);
 app.use("/package", packageRoutes, errorMiddleware);
+app.use("/admin", adminRoutes, errorMiddleware);
 
 // const Package = require("./models/packageModel");
 // const mongoose = require("mongoose");
