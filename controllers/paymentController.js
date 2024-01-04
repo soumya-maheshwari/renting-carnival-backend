@@ -27,9 +27,6 @@ const paymentMethod = async (req, res, next) => {
     success_url: "http://localhost:5173/success",
     cancel_url: "http://localhost:5173/failure",
   });
-
-  console.log("session ", session);
-
   res.json({ id: session.id });
 };
 
