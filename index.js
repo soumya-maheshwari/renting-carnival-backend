@@ -21,6 +21,7 @@ const profileRoutes = require("./routes/profileRoutes");
 const packageRoutes = require("./routes/packageRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const { errorMiddleware } = require("./middleware/errorHandler");
 
@@ -66,6 +67,7 @@ app.use("/profile", profileRoutes, errorMiddleware);
 app.use("/package", packageRoutes, errorMiddleware);
 app.use("/admin", adminRoutes, errorMiddleware);
 app.use("/payment", paymentRoutes, errorMiddleware);
+app.use("/order", orderRoutes, errorMiddleware)
 
 // const Package = require("./models/packageModel");
 // const mongoose = require("mongoose");
