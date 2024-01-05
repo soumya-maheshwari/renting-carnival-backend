@@ -7,6 +7,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const cloudinary = require("cloudinary").v2;
 const fileUpload = require("express-fileupload");
+const tmp = require("tmp");
 
 const PORT = process.env.PORT || 5000;
 
@@ -32,6 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(
   fileUpload({
     useTempFiles: true,
+    tempFileDir: tmp.dirSync().name,
     limits: { fileSize: 10 * 1024 * 1024 },
   })
 );
@@ -67,7 +69,7 @@ app.use("/profile", profileRoutes, errorMiddleware);
 app.use("/package", packageRoutes, errorMiddleware);
 app.use("/admin", adminRoutes, errorMiddleware);
 app.use("/payment", paymentRoutes, errorMiddleware);
-app.use("/order", orderRoutes, errorMiddleware)
+app.use("/order", orderRoutes, errorMiddleware);
 
 // const Package = require("./models/packageModel");
 // const mongoose = require("mongoose");
