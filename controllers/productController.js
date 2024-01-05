@@ -14,7 +14,7 @@ const createProduct = async (req, res, next) => {
     //     console.log(req.user);
     owner = req.user._id;
 
-    if (req.user.role !== "Seller") {
+    if (req.user.role === "buyer") {
       next(new ErrorHandler(400, "Buyer cannot create a product"));
     }
 

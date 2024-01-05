@@ -39,6 +39,13 @@ const userSchema = mongoose.Schema({
     type: String,
     default: "",
   },
+
+  boughtPackages: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Package",
+    },
+  ],
 });
 
 module.exports = mongoose.model("User", userSchema);

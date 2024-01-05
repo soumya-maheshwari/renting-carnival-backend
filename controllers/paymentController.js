@@ -1,7 +1,8 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
+const Cart = require("../models/cartModel");
 
 const paymentMethod = async (req, res, next) => {
-  const { products, customer } = req.body; 
+  const { products, customer } = req.body;
 
   const lineItems = products.map((product) => ({
     price_data: {
@@ -24,9 +25,21 @@ const paymentMethod = async (req, res, next) => {
     shipping_address_collection: {
       allowed_countries: ["IN"],
     },
-    success_url: "http://localhost:5173/success",
-    cancel_url: "http://localhost:5173/failure",
+    success_url: "https://renting-carnival.netlify.app/success",
+    cancel_url: "https://renting-carnival.netlify.app/failure",
   });
+
+  const userId = req.user._id;
+
+  let cart = await Cart.findOne({ user: userId });
+
+  if (cart) {
+    cart.items = [];
+    await cart.save();
+
+    console.log("cart deleted");
+  }
+
   res.json({ id: session.id });
 };
 
