@@ -6,10 +6,12 @@ const cloudinary = require("cloudinary").v2;
 const createProduct = async (req, res, next) => {
   try {
     const { name, description, price, stock, category } = req.body;
-    console.log("Request Body:", req.body);
+    // console.log("Request Body:", req.body);
 
-    console.log("Entire Request Object:", req);
-    console.log("Request file:", req.file);
+    // console.log("Entire Request Object:", req);
+    // console.log("Request file:", req.file);
+    // console.log("request files ", req.files.productImages);
+
 
     //     console.log(req.user);
     owner = req.user._id;
@@ -30,20 +32,29 @@ const createProduct = async (req, res, next) => {
       next(new ErrorHandler(400, "Category is required"));
     }
 
-    let file = req.files ? req.files.file : null;
-    let productImage = null;
+    let files = req.files ? req.files.productImages : null;
+    // console.log("files ", files);
+    let productImages = [];
 
-    if (file) {
-      const result = await cloudinary.uploader.upload(file.tempFilePath, {
-        public_id: `${Date.now()}`,
-        resource_type: "auto",
-        folder: "images",
-      });
+    if (files) {
+      for (const file of files) {
+        const result = await cloudinary.uploader.upload(file.tempFilePath, {
+          public_id: `${Date.now()}`,
+          resource_type: 'auto',
+          folder: 'images',
+        });
 
-      if (result.resource_type == "image") {
-        productImage = result.secure_url;
+        // console.log('result ', result);
+
+        if (result && result.secure_url) {
+          productImages.push(result.secure_url);
+        } else {
+          return res.status(500).json({ message: 'Failed to upload one or more images' });
+        }
       }
     }
+
+    console.log("product images ", productImages);
 
     const product = await Product.create({
       name,
@@ -52,12 +63,10 @@ const createProduct = async (req, res, next) => {
       stock,
       category,
       owner,
-      productImage,
+      productImages,
     });
 
     // console.log("product ", product);
-
-    console.log(product);
 
     return res.status(201).json({
       success: true,
