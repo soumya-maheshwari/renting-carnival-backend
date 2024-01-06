@@ -38,14 +38,14 @@ const addToCart = async (req, res, next) => {
         select: "name",
       },
     });
+    console.log("cart ", cart);
 
     if (!cart) {
       cart = await Cart.create({ user: userId, items: [] });
     }
+    const cartItem = cart.items.find((item) => item.product && item.product.equals(product._id));
+    console.log("items ", cartItem)
 
-    const cartItem = cart.items.find((item) =>
-      item.product.equals(product._id)
-    );
 
     console.log(cartItem);
 
