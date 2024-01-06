@@ -22,7 +22,7 @@ const packageRoutes = require("./routes/packageRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-
+const stripeRoutes = require("./routes/orderRoutes");
 const { errorMiddleware } = require("./middleware/errorHandler");
 
 app.use(express.json());
@@ -68,6 +68,7 @@ app.use("/package", packageRoutes, errorMiddleware);
 app.use("/admin", adminRoutes, errorMiddleware);
 app.use("/payment", paymentRoutes, errorMiddleware);
 app.use("/order", orderRoutes, errorMiddleware)
+app.use("/stripe", stripeRoutes, errorMiddleware)
 
 // const Package = require("./models/packageModel");
 // const mongoose = require("mongoose");
