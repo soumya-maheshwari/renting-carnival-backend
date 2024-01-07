@@ -23,8 +23,15 @@ const handleStripeWebhook = async (req, res, next) => {
     console.log("inside completed section ");
     const session = event.data.object;
 
-    // Get the packageId from the session metadata
+    console.log(session.metadata, "seesion metadata");
+    // Retrieve the packageId from the session metadata
     const packageId = session.metadata.packageId;
+
+    // Now 'packageId' contains the ID of the package associated with this Stripe Checkout Session
+    console.log("Received packageId:", packageId);
+
+    // Get the packageId from the session metadata
+    const userId = session.metadata.userId;
 
     // Update your package or perform actions related to successful payment
     try {
@@ -35,10 +42,7 @@ const handleStripeWebhook = async (req, res, next) => {
       // await Package.findByIdAndUpdate(packageId, { ... }); // Update the package in the database
 
       try {
-        const userId = req.user;
         const user = await User.findById(userId);
-
-        const { packageId } = req.body;
 
         const package = await Package.findById(packageId);
         if (!package) {
