@@ -86,13 +86,13 @@ const paymentMethodPackage = async (req, res, next) => {
 
     console.log("session ", session.id);
 
-    if (session.id) {
-      await User.findByIdAndUpdate(
-        userId,
-        { $push: { boughtPackages: selectedPackage._id } },
-        { new: true }
-      );
-    }
+    // if (session.id) {
+    //   await User.findByIdAndUpdate(
+    //     userId,
+    //     { $push: { boughtPackages: selectedPackage._id } },
+    //     { new: true }
+    //   );
+    // }
     res.status(200).json({
       success: true,
       msg: "Package bought",
