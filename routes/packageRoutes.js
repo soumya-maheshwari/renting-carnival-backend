@@ -5,5 +5,6 @@ const { authVerifyToken } = require("../middleware/authVerifyToken");
 
 router.get("/all", authVerifyToken, packageController.getAllPackages);
 router.get("/:packageId", authVerifyToken, packageController.getSinglePackage);
+router.post("/update", authVerifyToken, packageController.updatePackage);
 
 module.exports = router;

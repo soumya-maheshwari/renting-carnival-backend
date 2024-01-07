@@ -52,7 +52,6 @@ const addToCart = async (req, res, next) => {
     if (cartItem) {
       await Cart.populate(cartItem, { path: "product" });
       // Product already in cart, increase quantity
-
       cartItem.quantity++;
     } else {
       // Product not in cart, add it to the cart items array
