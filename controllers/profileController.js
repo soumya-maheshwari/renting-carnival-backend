@@ -53,6 +53,30 @@ const editProfile = async (req, res, next) => {
   }
 };
 
+const showPackage = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    const user = await User.findById(userId).populate("boughtPackages");
+
+    if (!user) {
+      next(new ErrorHandler(400, "User id required"));
+    }
+
+    const packages = user.boughtPackages;
+
+    return res.status(200).json({
+      success: true,
+      msg: "package displayed",
+      packages,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   editProfile,
+  showPackage,
 };
