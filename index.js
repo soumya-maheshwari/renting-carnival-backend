@@ -23,7 +23,7 @@ const packageRoutes = require("./routes/packageRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const orderRoutes = require("./routes/orderRoutes");
-const stripeRoutes = require("./routes/orderRoutes");
+const stripeRoutes = require("./routes/stripeWebhookRoutes.js");
 const { errorMiddleware } = require("./middleware/errorHandler");
 
 app.use(express.json());
