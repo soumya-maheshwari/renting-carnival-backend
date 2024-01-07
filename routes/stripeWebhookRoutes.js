@@ -5,7 +5,7 @@ const { authVerifyToken } = require("../middleware/authVerifyToken");
 
 router.post(
   "/webhook",
-  authVerifyToken,
+  //   authVerifyToken,
   stripeWebhookController.handleStripeWebhook
 );
 
