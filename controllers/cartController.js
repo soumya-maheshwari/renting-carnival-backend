@@ -202,23 +202,23 @@ const getAllProducts = async (req, res, next) => {
 
     let total = 0;
 
-    // cart.items.forEach((item) => {
-    //   const product = item.product;
-    //   const itemTotal = product.price * item.quantity;
+    cart.items.forEach((item) => {
+      const product = item.product;
+      const itemTotal = product.price * item.quantity;
 
-    //   // Add the detailed item information to the array
-    //   detailedCartItems.push({
-    //     product: {
-    //       _id: product._id,
-    //       name: product.productName,
-    //       price: product.price,
-    //     },
-    //     quantity: item.quantity,
-    //     itemTotal: itemTotal,
-    //   });
+      // Add the detailed item information to the array
+      detailedCartItems.push({
+        product: {
+          _id: product._id,
+          name: product.productName,
+          price: product.price,
+        },
+        quantity: item.quantity,
+        itemTotal: itemTotal,
+      });
 
-    //   total += itemTotal;
-    // });
+      total += itemTotal;
+    });
 
     return res.status(200).json({
       success: true,
