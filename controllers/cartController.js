@@ -43,7 +43,7 @@ const addToCart = async (req, res, next) => {
     if (!cart) {
       cart = await Cart.create({ user: userId, items: [] });
     }
-    const cartItem = cart.items.find(
+    const cartItem = cart?.items.find(
       (item) => item.product && item.product.equals(product._id)
     );
     console.log("items ", cartItem);
@@ -61,36 +61,35 @@ const addToCart = async (req, res, next) => {
 
     console.log(cartItem, "cartitem");
 
-    if (user.boughtPackages.length === 0) {
-      return next(new ErrorHandler(400, "User has not bought any package"));
-    }
+    if (user.boughtPackages.length > 0) {
+      const userPackage = await Package.find({
+        _id: { $in: user.boughtPackages },
+      });
+      const maxItemsAllowed = userPackage.numberOfProducts;
+      const maxPriceLimit = userPackage?.price;
 
-    const userPackage = await Package.findById(user.boughtPackages[0]);
+      console.log(maxItemsAllowed, "maxItemsAllowed");
 
-    const maxItemsAllowed = userPackage.numberOfProducts;
-    const maxPriceLimit = userPackage?.price;
+      // Check if adding this product exceeds the maximum number of items allowed
+      if (cart.items.length >= maxItemsAllowed) {
+        return next(
+          new ErrorHandler(400, "Exceeded maximum number of items allowed")
+        );
+      }
 
-    console.log(maxItemsAllowed, "maxItemsAllowed");
-
-    // Check if adding this product exceeds the maximum number of items allowed
-    if (cart.items.length >= maxItemsAllowed) {
-      return next(
-        new ErrorHandler(400, "Exceeded maximum number of items allowed")
+      // Calculate the total price in the cart
+      const totalPriceInCart = cart.items.reduce(
+        (total, item) => total + item.product.price * item.quantity,
+        0
       );
-    }
 
-    // Calculate the total price in the cart
-    const totalPriceInCart = cart.items.reduce(
-      (total, item) => total + item.product.price * item.quantity,
-      0
-    );
+      const productPrice = product.price;
 
-    const productPrice = product.price;
-
-    if (totalPriceInCart + productPrice > maxPriceLimit) {
-      return next(
-        new ErrorHandler(400, "Adding this product exceeds price limit")
-      );
+      if (totalPriceInCart + productPrice > maxPriceLimit) {
+        return next(
+          new ErrorHandler(400, "Adding this product exceeds price limit")
+        );
+      }
     }
     await cart.save();
 
