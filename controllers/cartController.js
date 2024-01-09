@@ -130,14 +130,13 @@ const removeFromCart = async (req, res, next) => {
       return next(new ErrorHandler(400, "Product not found"));
     }
 
-    let cart = await Cart.findOne({ user: userId });
-    // .populate({
-    //   path: "items.product",
-    //   populate: {
-    //     path: "owner",
-    //     select: "name",
-    //   },
-    // });
+    let cart = await Cart.findOne({ user: userId }).populate({
+      path: "items.product",
+      populate: {
+        path: "owner",
+        select: "name",
+      },
+    });
 
     if (!cart) {
       return next(new ErrorHandler(400, "Cart not found"));
