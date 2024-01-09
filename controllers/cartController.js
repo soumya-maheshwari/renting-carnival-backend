@@ -130,13 +130,14 @@ const removeFromCart = async (req, res, next) => {
       return next(new ErrorHandler(400, "Product not found"));
     }
 
-    let cart = await Cart.findOne({ user: userId }).populate({
-      path: "items.product",
-      populate: {
-        path: "owner",
-        select: "name",
-      },
-    });
+    let cart = await Cart.findOne({ user: userId });
+    // .populate({
+    //   path: "items.product",
+    //   populate: {
+    //     path: "owner",
+    //     select: "name",
+    //   },
+    // });
 
     if (!cart) {
       return next(new ErrorHandler(400, "Cart not found"));
@@ -185,10 +186,8 @@ const getAllProducts = async (req, res, next) => {
       user: userId,
     }).populate({
       path: "items.product",
-      populate: {
-        path: "owner",
-        select: "name",
-      },
+      model: "Product",
+      select: "name price owner category productImages",
     });
     if (!cart) {
       return res.status(200).json({
@@ -198,28 +197,29 @@ const getAllProducts = async (req, res, next) => {
         msg: "Cart is empty",
       });
     }
+    console.log(cart);
 
     const detailedCartItems = [];
 
     let total = 0;
 
-    cart.items.forEach((item) => {
-      const product = item.product;
-      const itemTotal = product.price * item.quantity;
+    // cart.items.forEach((item) => {
+    //   const product = item.product;
+    //   const itemTotal = product.price * item.quantity;
 
-      // Add the detailed item information to the array
-      detailedCartItems.push({
-        product: {
-          _id: product._id,
-          name: product.productName,
-          price: product.price,
-        },
-        quantity: item.quantity,
-        itemTotal: itemTotal,
-      });
+    //   // Add the detailed item information to the array
+    //   detailedCartItems.push({
+    //     product: {
+    //       _id: product._id,
+    //       name: product.productName,
+    //       price: product.price,
+    //     },
+    //     quantity: item.quantity,
+    //     itemTotal: itemTotal,
+    //   });
 
-      total += itemTotal;
-    });
+    //   total += itemTotal;
+    // });
 
     return res.status(200).json({
       success: true,
