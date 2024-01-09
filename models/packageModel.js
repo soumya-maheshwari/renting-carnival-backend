@@ -1,16 +1,5 @@
 const mongoose = require("mongoose");
 
-const durationSchema = new mongoose.Schema({
-  durationType: {
-    type: String, // 'annual' or 'halfYearly'
-    required: true,
-  },
-  price: {
-    type: Number,
-    required: true,
-  },
-});
-
 const packageSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -20,7 +9,10 @@ const packageSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  durations: [durationSchema],
+  price: {
+    type: Number,
+    required: true,
+  },
 });
 
 module.exports = mongoose.model("Package", packageSchema);

@@ -1,10 +1,16 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
+const emailUser = "vivek.thakur.ug20@nsut.ac.in";
+const emailPassword = "Vivekthakur!@#123";
+
 const sendEmail = async (email, otp) => {
   try {
+    // console.log(process.env.USER);
     const msg = {
-      from: "soumyamaheshwari2003@gmail.com",
+      from: process.env.USER,
+      // from: emailUser,
+
       to: email,
       subject: "Welcome to Renting Carnival - Email Verification",
       html: `
@@ -18,12 +24,20 @@ const sendEmail = async (email, otp) => {
     };
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
       port: 587,
-      // secure: true,
+      secure: false,
+      requireTLS: true,
+
+      // service: "gmail",
+      // port: 587,
+
       auth: {
         user: process.env.USER,
         pass: process.env.PASS,
+        // user: emailUser,
+
+        // pass: emailPassword,
       },
     });
 

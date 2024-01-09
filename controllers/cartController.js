@@ -43,9 +43,10 @@ const addToCart = async (req, res, next) => {
     if (!cart) {
       cart = await Cart.create({ user: userId, items: [] });
     }
-    const cartItem = cart.items.find((item) => item.product && item.product.equals(product._id));
-    console.log("items ", cartItem)
-
+    const cartItem = cart.items.find(
+      (item) => item.product && item.product.equals(product._id)
+    );
+    console.log("items ", cartItem);
 
     console.log(cartItem);
 
@@ -67,7 +68,7 @@ const addToCart = async (req, res, next) => {
     const userPackage = await Package.findById(user.boughtPackages[0]);
 
     const maxItemsAllowed = userPackage.numberOfProducts;
-    const maxPriceLimit = userPackage.durations[0].price;
+    const maxPriceLimit = userPackage?.price;
 
     console.log(maxItemsAllowed, "maxItemsAllowed");
 
