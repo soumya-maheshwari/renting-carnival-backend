@@ -3,7 +3,7 @@ const Package = require("../models/packageModel");
 const User = require("../models/userModel");
 
 const handleStripeWebhook = async (req, res, next) => {
-  console.log("handle stripe webhook called ");
+  console.log("handle stripe webhook called ", req);
   const sig = req.headers["stripe-signature"];
   let event;
 
