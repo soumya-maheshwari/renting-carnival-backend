@@ -8,6 +8,7 @@ const handleStripeWebhook = async (req, res, next) => {
   let event;
 
   try {
+    const rawBody = JSON.stringify(req.body); // Convert the body to a string
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
