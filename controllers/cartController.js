@@ -281,9 +281,31 @@ const deleteProduct = async (req, res, next) => {
   }
 };
 
+const deleteCart = async (req, res, next) => {
+  try {
+    const cartId = req.params.cartId;
+
+    const cart = await Cart.findById(cartId);
+    if (!cart) {
+      next(new ErrorHandler(404, "Cart not found"));
+    }
+
+    await Cart.findByIdAndDelete(cartId);
+
+    return res.status(200).json({
+      success: true,
+      msg: "Cart deleted",
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
 module.exports = {
   addToCart,
   removeFromCart,
   getAllProducts,
   deleteProduct,
+  deleteCart,
 };

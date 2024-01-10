@@ -7,5 +7,6 @@ router.post("/add", authVerifyToken, cartController.addToCart);
 router.post("/remove", authVerifyToken, cartController.removeFromCart);
 router.get("/get", authVerifyToken, cartController.getAllProducts);
 router.post("/delete", authVerifyToken, cartController.deleteProduct);
+router.delete("/delete/:cartId", cartController.deleteCart);
 
 module.exports = router;
