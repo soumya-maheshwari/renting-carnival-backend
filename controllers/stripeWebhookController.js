@@ -9,11 +9,10 @@ const handleStripeWebhook = async (req, res, next) => {
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.body,
+      rawBody,
       sig,
       "whsec_OTZZVRTAmLbZHiwGrNTVgwHgGeKPrwxF"
     );
-
     console.log(event);
 
     console.log("Raw Body:", req.rawBody); // Check if rawBody contains the expected payload
