@@ -9,7 +9,7 @@ const handleStripeWebhook = async (req, res, next) => {
 
   try {
     event = stripe.webhooks.constructEvent(
-      req.rawBody,
+      req.body,
       sig,
       "whsec_OTZZVRTAmLbZHiwGrNTVgwHgGeKPrwxF"
     );
@@ -19,7 +19,6 @@ const handleStripeWebhook = async (req, res, next) => {
     console.log("Raw Body:", req.rawBody); // Check if rawBody contains the expected payload
     console.log("Signature:", sig); // Verify signature
     console.log("Expected Secret:", "whsec_OTZZVRTAmLbZHiwGrNTVgwHgGeKPrwxF");
-    console.log("session ", session.id);
   } catch (err) {
     console.error(err);
     return res.status(400).send(`Webhook Error: ${err.message}`);
