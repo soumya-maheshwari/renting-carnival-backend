@@ -224,6 +224,7 @@ const getAllProducts = async (req, res, next) => {
       success: true,
       cart: cart.items,
       total: total,
+      cartId: cart._id,
       msg: "Products in the cart",
       detailedCartItems: detailedCartItems,
     });
