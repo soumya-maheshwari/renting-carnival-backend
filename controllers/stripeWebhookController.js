@@ -13,6 +13,13 @@ const handleStripeWebhook = async (req, res, next) => {
       sig,
       "whsec_OTZZVRTAmLbZHiwGrNTVgwHgGeKPrwxF"
     );
+
+    console.log(event);
+
+    console.log("Raw Body:", req.rawBody); // Check if rawBody contains the expected payload
+    console.log("Signature:", sig); // Verify signature
+    console.log("Expected Secret:", "whsec_OTZZVRTAmLbZHiwGrNTVgwHgGeKPrwxF");
+    console.log("session ", session.id);
   } catch (err) {
     console.error(err);
     return res.status(400).send(`Webhook Error: ${err.message}`);

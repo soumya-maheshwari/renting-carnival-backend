@@ -96,9 +96,6 @@ const paymentMethodPackage = async (req, res, next) => {
       cancel_url: "https://renting-carnival.netlify.app",
     });
 
-    console.log("Raw Body:", req.rawBody); // Check if rawBody contains the expected payload
-    console.log("Signature:", sig); // Verify signature
-    console.log("Expected Secret:", "whsec_OTZZVRTAmLbZHiwGrNTVgwHgGeKPrwxF");
     console.log("session ", session.id);
 
     // if (session.id) {
