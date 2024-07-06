@@ -52,3 +52,10 @@ npm start
  ```CMD
 http://localhost:5000
 ```
+
+
+
+## Frontend Repository
+
+You can find the frontend repository for this project at:
+[Renting Carnival Frontend](https://github.com/soumya-maheshwari/Renting-Carnival-Frontend)
